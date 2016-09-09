@@ -1,6 +1,7 @@
 package com.example.controller;
 
-import com.example.UserAlreadyExistsException;
+import com.example.exceptions.UserAlreadyDeletedException;
+import com.example.exceptions.UserAlreadyExistsException;
 import com.example.model.User;
 import com.example.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +57,13 @@ public class MainController {
 
     @RequestMapping(value = "/users/{id}", method = RequestMethod.DELETE, produces = "text/plain")
     public @ResponseBody String deleteUser(@PathVariable("id") int id) {
-        userService.deleteUser(id);
+        try {
+            userService.deleteUser(id);
+        } catch (UserAlreadyDeletedException ex) {
+            return TEXT_RESPONSE_NOT_OK;
+        }
+
+
 
         return TEXT_RESPONSE_OK;
     }

@@ -1,11 +1,11 @@
 package com.example.service.impl;
 
-import com.example.UserAlreadyExistsException;
+import com.example.exceptions.UserAlreadyDeletedException;
+import com.example.exceptions.UserAlreadyExistsException;
 import com.example.model.User;
 import com.example.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.integration.IntegrationAutoConfiguration;
 import org.springframework.stereotype.Service;
 
 
@@ -19,16 +19,18 @@ import java.util.Map;
  */
 @Service
 public class BasicUserService implements UserService {
-    public static final Logger LOGGER;
+    private static final Logger LOGGER;
+    private static final Map<Integer, User> userList;
 
     static {
         LOGGER = LoggerFactory.getLogger(BasicUserService.class);
+        userList = new HashMap<>();
     }
 
-    public Map<Integer, User> userList = new HashMap<>();
+
     @Override
     public void addUser(int userId, User theUser) throws UserAlreadyExistsException {
-        if(theUser != null) {
+        if (theUser != null) {
             if (!userExists(userId)) {
                 userList.put(userId, theUser);
                 LOGGER.info("[LOCAL]: Added user with user=" + theUser + " and userID=" + userId);
@@ -46,17 +48,20 @@ public class BasicUserService implements UserService {
     @Override
     public User getUser(int userId) {
         User newUser = userList.get(userId);
-
         LOGGER.info("[LOCAL]: Got user with user=" + newUser + " and userID=" + userId);
-
         return newUser;
     }
 
     @Override
-    public void deleteUser(int userId) {
-        User deletedUser = userList.get(userId);
-        userList.remove(userId);
-        LOGGER.info("[LOCAL]: Deleted user=" + deletedUser + " with userID=" + userId);
+    public void deleteUser(int userId) throws UserAlreadyDeletedException {
+        if (userExists(userId)) {
+            User deletedUser = userList.get(userId);
+            userList.remove(userId);
+            LOGGER.info("[LOCAL]: Deleted user=" + deletedUser + " with userID=" + userId);
+        } else {
+            LOGGER.info("[LOCAL]: The user with id=" + userId + " does not exists");
+            throw new UserAlreadyDeletedException();
+        }
     }
 
     @Override

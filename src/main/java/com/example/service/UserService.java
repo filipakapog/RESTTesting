@@ -1,6 +1,7 @@
 package com.example.service;
 
-import com.example.UserAlreadyExistsException;
+import com.example.exceptions.UserAlreadyDeletedException;
+import com.example.exceptions.UserAlreadyExistsException;
 import com.example.model.User;
 
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
 public interface UserService {
     void addUser(int userId, User theUser) throws UserAlreadyExistsException;
     User getUser(int userId);
-    void deleteUser(int userId);
+    void deleteUser(int userId) throws UserAlreadyDeletedException;
     void updateUser(int userId, User newUserData);
 
     List<User> getAllUsers();
