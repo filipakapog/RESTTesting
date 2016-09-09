@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -49,6 +50,27 @@ public class BasicUserService implements UserService {
 
     @Override
     public List<User> getAllUsers() {
-        return null;
+        List<User> allUsers = new ArrayList<>();
+        User newUser1 = new User();
+        newUser1.setFirstName("Ion1");
+        newUser1.setLastName("Mihai1");
+        newUser1.setAge(20);
+        allUsers.add(newUser1);
+
+        User newUser2 = new User();
+        newUser2.setFirstName("Ion2");
+        newUser2.setLastName("Mihai2");
+        newUser2.setAge(21);
+        allUsers.add(newUser2);
+
+        User newUser3 = new User();
+        newUser3.setFirstName("Ion3");
+        newUser3.setLastName("Mihai3");
+        newUser3.setAge(23);
+        allUsers.add(newUser3);
+
+        LOGGER.info("[LOCAL]: Got the list of users list=" + allUsers);
+
+        return allUsers;
     }
 }

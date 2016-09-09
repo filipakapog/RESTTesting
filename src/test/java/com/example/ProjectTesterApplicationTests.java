@@ -12,6 +12,8 @@ public class ProjectTesterApplicationTests {
 	@Test
 	public void contextLoads() {
 		System.out.print("2");
+		System.out.print("2");
+		System.out.print("2");
 	}
 
 }

@@ -17,20 +17,26 @@ public class MainController {
     UserService userService;
 
     @RequestMapping(value = {"/", "/index"})
-    public @ResponseBody String index() {
+    public
+    @ResponseBody
+    String index() {
         return "This is just the index page";
     }
 
 
-    @RequestMapping(value = "/users/{id}", method=RequestMethod.POST, consumes={"application/json"},
-            produces="text/html")
-    public @ResponseBody String addUser(@PathVariable("id") int id, @RequestBody User user) {
+    @RequestMapping(value = "/users/{id}", method = RequestMethod.POST, consumes = {"application/json"},
+            produces = "text/html")
+    public
+    @ResponseBody
+    String addUser(@PathVariable("id") int id, @RequestBody User user) {
         userService.addUser(id, user);
         return TEXT_RESPONSE_OK;
     }
 
-    @RequestMapping(value = "/users/{id}", method=RequestMethod.GET, produces="application/json")
-    public @ResponseBody User getUser(@PathVariable("id") int id) {
+    @RequestMapping(value = "/users/{id}", method = RequestMethod.GET, produces = "application/json")
+    public
+    @ResponseBody
+    User getUser(@PathVariable("id") int id) {
         return userService.getUser(id);
     }
 }
