@@ -44,4 +44,10 @@ public class User {
                 ", age=" + age +
                 '}';
     }
+
+    public boolean equals(User comparedUser){
+        if(age == comparedUser.getAge() && firstName == comparedUser.getFirstName() && lastName == comparedUser.getLastName())
+        return true;
+        else return false;
+    }
 }
