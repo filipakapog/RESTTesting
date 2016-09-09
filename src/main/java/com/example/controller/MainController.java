@@ -30,8 +30,9 @@ public class MainController {
     @ResponseBody
     String addUser(@PathVariable("id") int id, @RequestBody User user) {
         userService.addUser(id, user);
+
         return TEXT_RESPONSE_OK;
-    }
+}
 
     @RequestMapping(value = "/users/{id}", method = RequestMethod.GET, produces = "application/json")
     public
