@@ -1,5 +1,6 @@
 package com.example.service.impl;
 
+import com.example.UserAlreadyExistsException;
 import com.example.model.User;
 import com.example.service.UserService;
 import org.slf4j.Logger;
@@ -26,9 +27,20 @@ public class BasicUserService implements UserService {
 
     public Map<Integer, User> userList = new HashMap<>();
     @Override
-    public void addUser(int userId, User theUser) {
-        LOGGER.info("[LOCAL]: Added user with user=" + theUser + " and userID=" + userId);
-        userList.put(userId, theUser);
+    public void addUser(int userId, User theUser) throws UserAlreadyExistsException {
+        if(theUser != null) {
+            if (!userExists(userId)) {
+                userList.put(userId, theUser);
+                LOGGER.info("[LOCAL]: Added user with user=" + theUser + " and userID=" + userId);
+            } else {
+                LOGGER.info("[LOCAL]: The User user=" + theUser + " with userID=" + userId + "already exists");
+                throw new UserAlreadyExistsException();
+            }
+        }
+    }
+
+    private boolean userExists(int userId) {
+        return null != userList.get(userId);
     }
 
     @Override
@@ -56,7 +68,9 @@ public class BasicUserService implements UserService {
     @Override
     public List<User> getAllUsers() {
         List<User> allUsers = new ArrayList<>();
-
+        for (Map.Entry<Integer, User> entry : userList.entrySet()) {
+            allUsers.add(entry.getValue());
+        }
 
         LOGGER.info("[LOCAL]: Got the list of users list=" + allUsers);
 
