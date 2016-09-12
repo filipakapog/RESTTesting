@@ -6,13 +6,11 @@ import com.example.model.User;
 import com.example.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.integration.IntegrationAutoConfiguration;
 import org.springframework.stereotype.Service;
 
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by fghimpeteanu on 9/9/2016.
