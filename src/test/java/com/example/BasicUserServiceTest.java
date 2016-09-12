@@ -1,12 +1,17 @@
 package com.example;
 
 import com.example.controller.MainController;
+import com.example.exceptions.UserAlreadyDeletedException;
+import com.example.exceptions.UserAlreadyExistsException;
 import com.example.model.User;
+import com.example.service.impl.BasicUserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -20,10 +25,13 @@ import static org.junit.Assert.assertNotEquals;
 public class BasicUserServiceTest {
 
     @Autowired
-    MainController mainController;
+    BasicUserService userService;
 
     @Test
-    public void testUpdateUser(){
+    public void testUpdateUser() throws UserAlreadyExistsException, UserAlreadyDeletedException {
+
+        Random r = new Random();
+        int testId = r.nextInt(10);
 
         User testUser = new User();
         User updatedTestUser = new User();
@@ -36,15 +44,16 @@ public class BasicUserServiceTest {
         updatedTestUser.setFirstName("M1k3");
         updatedTestUser.setLastName("J0hnny");
 
-        mainController.addUser(1, testUser);
-        mainController.updateUser(1, updatedTestUser);
+        userService.addUser(testId, testUser);
+        userService.updateUser(testId, updatedTestUser);
 
-        assertNotEquals(testUser, mainController.getUser(1));
-        mainController.deleteUser(1);
+        assertNotEquals(testUser, userService.getUser(1));
+        userService.deleteUser(testId);
+
     }
 
     @Test
-    public void testGetUser(){
+    public void testGetUser() throws UserAlreadyExistsException, UserAlreadyDeletedException {
 
         User testUser = new User();
 
@@ -52,9 +61,9 @@ public class BasicUserServiceTest {
         testUser.setFirstName("Dumeata");
         testUser.setLastName("Gogu");
 
-        mainController.addUser(1, testUser);
-        assertEquals(testUser, mainController.getUser(1));
-        mainController.deleteUser(1);
+        userService.addUser(1, testUser);
+        assertEquals(testUser, userService.getUser(1));
+        userService.deleteUser(1);
     }
 
     @Test
