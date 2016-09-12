@@ -3,12 +3,33 @@ package com.example;
 import com.example.controller.MainController;
 import com.example.model.User;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.EntityBuilder;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -30,6 +51,15 @@ public class MainControllerTests {
     private static final char[] letters;
     private static Random random;
 
+    private static final String USER_AGENT = "Mozilla/5.0";
+    private static final String CONTENT_TYPE = "application/json;charset=UTF-8";
+
+    String body = "{\n" +
+            "\t\"firstName\":\"Maria\",\n" +
+            "\t\"lastName\":\"Ioana\",\n" +
+            "\t\"age\":25\n" +
+            "} ";
+
     static {
         random = new Random();
         letters = new char[26];
@@ -41,9 +71,105 @@ public class MainControllerTests {
 
 
     @Test
-    public void testAddUser() {
+    public void testAddUserGoodUrl() {
+//         [ Q ] How to perform same behaviour with mocking?
+        int userId = 1;
+        String theUrl = "http://localhost:8080/users/" + userId;
+        HttpClient theClient = new DefaultHttpClient();
+        HttpPost theRequest = new HttpPost(theUrl);
+        theRequest.addHeader("Content-Type", CONTENT_TYPE);
+
+
+        // setting the request parameters
+        List<NameValuePair> theRequestParameters = new ArrayList<>();
+
+        EntityBuilder entityBuilder = EntityBuilder.create();
+        entityBuilder.setText(body);
+
+
+
+        User user = getNewUser();
+        theRequestParameters.add(new BasicNameValuePair("firstName", user.getFirstName()));
+        theRequestParameters.add(new BasicNameValuePair("lastName", user.getLastName()));
+        theRequestParameters.add(new BasicNameValuePair("age", "" + user.getAge()));
+        try {
+//            theRequest.setEntity( new UrlEncodedFormEntity(theRequestParameters));
+            theRequest.setEntity(entityBuilder.build());
+            HttpResponse response = theClient.execute(theRequest);
+
+            assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.OK);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+
+
+
+    @Test
+    public void testgetUserTest() throws IOException {
+        // [ Q ] How to perform same behaviour with mocking?
+        int userId = 2;
+        String theUrl = "http://localhost:8080/users/" + userId;
+        HttpClient theClient = new DefaultHttpClient();
+        HttpGet theRequest = new HttpGet(theUrl);
+        theRequest.addHeader("User-Agent", USER_AGENT); // should check what happens if omitted
+        theRequest.addHeader("Content-Type", CONTENT_TYPE);
+
+        HttpResponse response = theClient.execute(theRequest);
+
+        assertEquals(200, response.getStatusLine().getStatusCode());
+
+
+        BufferedReader rd = new BufferedReader(
+                new InputStreamReader(response.getEntity().getContent()));
+
+        StringBuffer result = new StringBuffer();
+        String line = "";
+        while ((line = rd.readLine()) != null) {
+            result.append(line);
+        }
+
+
+
+        String res = result.toString();
+        String expected = "{\"firstName\":\"Maria\",\"lastName\":\"Ioana\",\"age\":25}";
+        assertEquals(expected, res);
+
 
     }
+
+
+
+
+//        // setting the request parameters
+//        List<NameValuePair> theRequestParameters = new ArrayList<>();
+//
+//        User user = getNewUser();
+//        theRequestParameters.add(new BasicNameValuePair("firstName", user.getFirstName()));
+//        theRequestParameters.add(new BasicNameValuePair("lastName", user.getLastName()));
+//        theRequestParameters.add(new BasicNameValuePair("age", "" + user.getAge()));
+//        try {
+//            theRequest.setEntity( new UrlEncodedFormEntity(theRequestParameters));
+//            HttpResponse response = theClient.execute(theRequest);
+//
+//            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.OK);
+//        } catch (UnsupportedEncodingException e) {
+//            e.printStackTrace();
+//        } catch (ClientProtocolException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
+
 
     private User getNewUser() {
         User newUser = new User();
