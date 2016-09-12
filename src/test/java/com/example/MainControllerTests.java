@@ -9,9 +9,15 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
+
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
 /**
@@ -25,25 +31,5 @@ public class MainControllerTests {
     @Autowired
     MainController mainController;
 
-    @Test
-    public void testUpdateUser(){
 
-        final Map<Integer, User> userList = new HashMap<>();
-
-        User testUser = new User();
-        User updatedTestUser = new User();
-
-        testUser.setAge(22);
-        testUser.setFirstName("Mike");
-        testUser.setLastName("Johnny");
-
-        updatedTestUser.setAge(24);
-        updatedTestUser.setFirstName("M1k3");
-        updatedTestUser.setLastName("J0hnny");
-
-        mainController.addUser(1, testUser);
-        mainController.updateUser(1, updatedTestUser);
-
-        assertNotEquals(testUser, mainController.getUser(1));
-    }
 }
