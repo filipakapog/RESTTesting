@@ -2,18 +2,14 @@ package com.example;
 
 import com.example.controller.MainController;
 import com.example.model.User;
-import org.junit.Assert;
-import org.junit.Before;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.ArrayList;
 import java.util.Random;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by fghimpeteanu on 9/9/2016.
@@ -22,8 +18,6 @@ import static org.junit.Assert.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class MainControllerTests {
-//    private static final MainController mainController = new MainController();
-
     @Autowired
     MainController mainController;
 
@@ -45,19 +39,10 @@ public class MainControllerTests {
         }
     }
 
-    User newUser;
-    ArrayList<User> listOfUsers;
-
-    @Before void initEnv() {
-        newUser = getNewUser();
-    }
-
 
     @Test
     public void testAddUser() {
-        User newUser = getNewUser();
-        String response = mainController.addUser(1, newUser);
-        assertEquals(TEXT_RESPONSE_OK, response);
+
     }
 
     private User getNewUser() {
@@ -81,20 +66,15 @@ public class MainControllerTests {
 
     @Test
     public void testAddUserTwice() {
-        mainController.addUser(1, newUser);
-        String response = mainController.addUser(1, newUser);
-        assertNotEquals(TEXT_RESPONSE_OK, response);
+
     }
 
     @Test
-    public void testUpdateUser() {
-        User updatedUser = getNewUser();
+    public void testUpdateUser(){
 
-        mainController.addUser(1, newUser);
-        mainController.updateUser(1, updatedUser);
 
-        assertNotEquals(newUser, mainController.getUser(1));
     }
+
 
 
 }
