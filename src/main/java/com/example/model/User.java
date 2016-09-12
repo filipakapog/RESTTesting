@@ -44,4 +44,19 @@ public class User {
                 ", age=" + age +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (null == obj) return false;
+        if (this == obj) return true;
+        if (!(obj instanceof User)) return false;
+
+        User other = (User) obj;
+        if (this.getAge() != other.getAge() ||
+                !this.getFirstName().equals(other.getFirstName()) ||
+                !this.getLastName().equals(other.getLastName())) return false;
+
+        // The two objects are equal
+        return true;
+    }
 }
