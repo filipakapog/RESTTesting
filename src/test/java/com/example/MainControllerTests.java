@@ -3,12 +3,37 @@ package com.example;
 import com.example.controller.MainController;
 import com.example.model.User;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.EntityBuilder;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+
+import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+
+import org.apache.http.util.EntityUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -30,6 +55,9 @@ public class MainControllerTests {
     private static final char[] letters;
     private static Random random;
 
+    private static String body = "{\"firstName\":\"Maria\",\"lastName\":\"Ioana\",\"age\":25}";
+    private static String bodyUpdate = "{\"firstName\":\"Ion\",\"lastName\":\"Popescu\",\"age\":73}";
+
     static {
         random = new Random();
         letters = new char[26];
@@ -39,11 +67,58 @@ public class MainControllerTests {
         }
     }
 
+    @Test
+    public void testAddUser() throws IOException {
+        // [ Q ] How to perform same behaviour with mocking?
+        int userId = 1;
+        String theUrl = "http://localhost:8080/users/" + userId;
+        HttpClient theClient = new DefaultHttpClient();
+        HttpPost theRequest = new HttpPost(theUrl);
+        theRequest.addHeader("Content-Type", "application/json");
+
+        EntityBuilder entityBuilder = EntityBuilder.create();
+        entityBuilder.setText(body);
+        theRequest.setEntity(entityBuilder.build());
+        HttpResponse response = theClient.execute(theRequest);
+
+        assertEquals(response.getStatusLine().getStatusCode(), 200);
+        String mimeType = EntityUtils.getContentMimeType(response.getEntity());
+        assertEquals("text/plain", mimeType);
+    }
 
     @Test
-    public void testAddUser() {
+    public void testGetUser() throws IOException {
+        int userId = 1;
+        String theUrl = "http://localhost:8080/users/" + userId;
+        HttpClient theClient = new DefaultHttpClient();
+        HttpGet theRequest = new HttpGet(theUrl);
+        theRequest.addHeader("Content-Type", "text/plain");
 
+        HttpResponse response = theClient.execute(theRequest);
+
+        EntityBuilder entityBuilder = EntityBuilder.create();
+        entityBuilder.setText(body);
+
+        // I think that's enough to test the response code
+        assertEquals(response.getStatusLine().getStatusCode(), 200);
+        String mimeType = EntityUtils.getContentMimeType(response.getEntity());
+        assertEquals("application/json", mimeType);
+
+        // otherwise if testUpdateUser is ran before testGetUser, the data in the body of the response will change
+//        BufferedReader rd = new BufferedReader(
+//                new InputStreamReader(response.getEntity().getContent()));
+//
+//        StringBuffer result = new StringBuffer();
+//        String line = "";
+//        while ((line = rd.readLine()) != null) {
+//            result.append(line);
+//        }
+//
+//        String res = result.toString();
+//        String expected = body;
+//        assertEquals(expected, res);
     }
+
 
     private User getNewUser() {
         User newUser = new User();
@@ -63,18 +138,65 @@ public class MainControllerTests {
         return theRandomString.toString();
     }
 
-
     @Test
-    public void testAddUserTwice() {
+    public void testUpdateUser() throws IOException {
+        int userId = 1;
+        String theUrl = "http://localhost:8080/users/" + userId;
+        HttpClient theClient = new DefaultHttpClient();
+        HttpPut theRequest = new HttpPut(theUrl);
+        theRequest.addHeader("Content-Type", "application/json");
 
+        EntityBuilder entityBuilder = EntityBuilder.create();
+        entityBuilder.setText(bodyUpdate);
+        theRequest.setEntity(entityBuilder.build());
+        HttpResponse response = theClient.execute(theRequest);
+
+        assertEquals(200, response.getStatusLine().getStatusCode());
+        String mimeType = EntityUtils.getContentMimeType(response.getEntity());
+        assertEquals("text/plain", mimeType);
     }
 
     @Test
-    public void testUpdateUser(){
+    public void testDeleteUser() throws IOException {
+        int userId = 1;
+        String theUrl = "http://localhost:8080/users/" + userId;
+        HttpClient theClient = new DefaultHttpClient();
+        HttpDelete theRequest = new HttpDelete(theUrl);
+        theRequest.addHeader("Content-Type", "text/plain");
 
+        HttpResponse response = theClient.execute(theRequest);
 
+        assertEquals(200, response.getStatusLine().getStatusCode());
+        String mimeType = EntityUtils.getContentMimeType(response.getEntity());
+        assertEquals("text/plain", mimeType);
     }
 
+    @Test
+    public void testDeleteNonexistentUser() throws IOException {
+        int userId = -1;
+        String theUrl = "http://localhost:8080/users/" + userId;
+        HttpClient theClient = new DefaultHttpClient();
+        HttpDelete theRequest = new HttpDelete(theUrl);
+        theRequest.addHeader("Content-Type", "text/plain");
 
+        HttpResponse response = theClient.execute(theRequest);
 
+        assertEquals(400, response.getStatusLine().getStatusCode());
+        String mimeType = EntityUtils.getContentMimeType(response.getEntity());
+        assertEquals("text/plain", mimeType);
+    }
+
+    @Test
+    public void testGetAllUsers() throws IOException {
+        String theUrl = "http://localhost:8080/users";
+        HttpClient theClient = new DefaultHttpClient();
+        HttpGet theRequest = new HttpGet(theUrl);
+        theRequest.addHeader("Content-Type", "text/plain");
+
+        HttpResponse response = theClient.execute(theRequest);
+
+        assertEquals(200, response.getStatusLine().getStatusCode());
+        String mimeType = EntityUtils.getContentMimeType(response.getEntity());
+        assertEquals("application/json", mimeType);
+    }
 }
