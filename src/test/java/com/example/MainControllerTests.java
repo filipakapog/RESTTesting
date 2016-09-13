@@ -4,37 +4,33 @@ import com.example.controller.MainController;
 import com.example.model.User;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.EntityBuilder;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
+
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
 
 import org.apache.http.util.EntityUtils;
-import org.junit.Ignore;
+
 import org.junit.Test;
+
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.io.BufferedReader;
+
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
+
 import java.util.Random;
+
+
+
 
 /**
  * Created by fghimpeteanu on 9/9/2016.
@@ -70,6 +66,7 @@ public class MainControllerTests {
     @Test
     public void testAddUser() throws IOException {
         // [ Q ] How to perform same behaviour with mocking?
+
         int userId = 1;
         String theUrl = "http://localhost:8080/users/" + userId;
         HttpClient theClient = new DefaultHttpClient();
@@ -118,7 +115,6 @@ public class MainControllerTests {
 //        String expected = body;
 //        assertEquals(expected, res);
     }
-
 
     private User getNewUser() {
         User newUser = new User();
