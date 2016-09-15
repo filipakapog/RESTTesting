@@ -14,9 +14,12 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 
 import org.apache.http.util.EntityUtils;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import org.junit.runner.RunWith;
@@ -62,6 +65,7 @@ public class MainControllerTests {
             letters[i++] = ch;
         }
     }
+
 
     @Test
     public void testAddUser() throws IOException {
