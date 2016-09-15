@@ -1,4 +1,4 @@
-package com.example;
+package com.example.unit;
 
 import com.example.controller.MainController;
 import com.example.exceptions.UserAlreadyDeletedException;
@@ -138,6 +138,6 @@ public class BasicUserServiceTest {
 //    @Test
 //    public void clearList() throws UserAlreadyDeletedException {
 //        for(int i = 1; i < 11; i++)
-//            userService.deleteUser(i);
+//            userServiceMock.deleteUser(i);
 //    }
 }

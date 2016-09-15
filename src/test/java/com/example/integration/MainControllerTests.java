@@ -1,4 +1,4 @@
-package com.example;
+package com.example.integration;
 
 import com.example.controller.MainController;
 import com.example.model.User;
@@ -35,7 +35,6 @@ import java.util.Random;
 /**
  * Created by fghimpeteanu on 9/9/2016.
  */
-
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class MainControllerTests {
