@@ -14,9 +14,12 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 
 import org.apache.http.util.EntityUtils;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import org.junit.runner.RunWith;
@@ -41,10 +44,6 @@ public class MainControllerTests {
     @Autowired
     MainController mainController;
 
-    //[ Q ] Is it ok to just copy paste these two lines from the project
-    private static final String TEXT_RESPONSE_OK = "The request was successful";
-    private static final String TEXT_RESPONSE_NOT_OK = "The request was unsuccessful";
-
     private static final int MAX_AGE = 80;
     private static final int MAX_RANDOM_STRING_SIZE = 5; // characters
     private static final char[] letters;
@@ -61,6 +60,7 @@ public class MainControllerTests {
             letters[i++] = ch;
         }
     }
+
 
     @Test
     public void testAddUser() throws IOException {
@@ -195,3 +195,4 @@ public class MainControllerTests {
         assertEquals("application/json", mimeType);
     }
 }
+
